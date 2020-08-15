@@ -1,9 +1,89 @@
-<!doctype html>
-<title>Hello from Flask</title>
-{% if name %}
-  <h1>Hello {{ name }}!</h1>
-{% else %}
-  <h1>Hello World!</h1>
-{% endif %}
-<img src="{{ url_for('static', filename='pic/celtic-dragon2.gif') }}"></img>
-<a href="{{ url_for('static', filename='sample1.html') }}"> static link </a>
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8" />
+  <title>This is a Light World</title>
+</head>
+
+<body onload="main()">
+  {% if name %}
+  <h1>Hello {{ name }}! Welcome to my light world!</h1>
+  {% else %}
+  <h1>Welcome to my light world!</h1>
+  {% endif %}
+  <canvas id="webgl" width="600" height="600">
+    This browser might not support "canvas" attribute.
+  </canvas>
+  <script src='{{ url_for("static", filename="js/gllib/webgl-utils.js") }}'></script>
+  <script src='{{ url_for("static", filename="js/gllib/webgl-debug.js") }}'></script>
+  <script src='{{ url_for("static", filename="js/gllib/cuon-utils.js") }}'></script>
+  <!-- <script src='{{ url_for("static", filename="js/program/MultiPoint.js") }}'>
+    function main() {
+      multiPoint("{{ vsSrc }}", "{{ fsSrc }}")
+    }
+  </script> -->
+  <script>
+    function loadShaderSourceCodes(fileName) {
+      let xhr = new XMLHttpRequest();
+      let okStatus = document.location.protocol === "http:" ? 200 : 0;
+      xhr.open('GET', fileName, false);
+      xhr.overrideMimeType("text/plain;charset=utf-8");//默认为utf-8
+      xhr.send();
+      return xhr.status === okStatus ? xhr.responseText : null;
+    }
+
+    let VSHADER_SOURCE = loadShaderSourceCodes("{{ vsSrc }}");
+    let FSHADER_SOURCE = loadShaderSourceCodes("{{ fsSrc }}");
+    function main() {
+      let canvas = document.getElementById("webgl");
+      let gl = getWebGLContext(canvas);
+      if (!gl) {
+        console.log("Failed to get the rendering context of WebGL!");
+        return;
+      }
+      // Initialize shaders.
+      if (!initShaders(gl, VSHADER_SOURCE, FSHADER_SOURCE)) {
+        console.log("Failed to initilize shaders.");
+        return;
+      }
+      let numVetices = initVertexBuffers(gl);
+      if (numVetices < 0) {
+        console.log("Failed to set the positions of the vetices.");
+        return;
+      }
+      gl.clearColor(0.0, 0.0, 0.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.POINTS, 0, numVetices);
+    }
+
+    function initVertexBuffers(gl) {
+      let vertices = new Float32Array([
+        0.0, 0.5, -0.5, -0.5, 0.5, -0.5
+      ]);
+      let numVetices = vertices.length / 2;
+      // Create buffer object.
+      let vertexBuffer = gl.createBuffer();
+      if (!vertexBuffer) {
+        console.log("Failed to create the buffer obejct.");
+        return -1;
+      }
+      // Binding buffer object to target.
+      gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+      // Write data to buffer object.
+      gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+      let aPosition = gl.getAttribLocation(gl.program, "a_Position");
+      if (aPosition < 0) {
+        console.log("Failed to get the storage location of a_Position");
+        return;
+      }
+      // Assign buffer object to aPosition variable.
+      gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+      // Connect variable aPosition to its assigned buffer object.
+      gl.enableVertexAttribArray(aPosition);
+      return numVetices;
+    }
+  </script>
+</body>
+
+</html>
