@@ -1,6 +1,6 @@
-// require("../gllib/cuon-utils");
+import { getWebGLContext, initShaders } from "../gllib/cuon-utils";
 
-export function multiPoint(vShader, fShader) {
+function multiPoint(vShader: string, fShader: string) {
     let canvas = document.getElementById("webgl");
     let gl = getWebGLContext(canvas);
     if (!gl) {
@@ -48,3 +48,18 @@ function initVertexBuffers(gl) {
     gl.enableVertexAttribArray(aPosition);
     return numVetices;
 }
+
+const VSHADER_SOURCE =
+  'attribute vec4 a_Position;\n' +
+  'void main() {\n' +
+  '  gl_Position = a_Position;\n' +
+  '  gl_PointSize = 10.0;\n' +
+  '}\n';
+
+// Fragment shader program
+const FSHADER_SOURCE =
+  'void main() {\n' +
+  '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
+  '}\n';
+
+multiPoint(VSHADER_SOURCE, FSHADER_SOURCE);

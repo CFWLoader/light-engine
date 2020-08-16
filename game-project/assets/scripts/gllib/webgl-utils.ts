@@ -57,7 +57,7 @@
  * visible.
  */
 
-WebGLUtils = function() {
+export class WebGLUtils {
 
 /**
  * Creates the HTLM for a failure message
@@ -65,7 +65,7 @@ WebGLUtils = function() {
  *        canvas.
  * @return {string} The html.
  */
-var makeFailHTML = function(msg) {
+public static makeFailHTML(msg) {
   return '' +
         '<div style="margin: auto; width:500px;z-index:10000;margin-top:20em;text-align:center;">' + msg + '</div>';
   return '' +
@@ -81,7 +81,7 @@ var makeFailHTML = function(msg) {
  * Mesasge for getting a webgl browser
  * @type {string}
  */
-var GET_A_WEBGL_BROWSER = '' +
+public static readonly GET_A_WEBGL_BROWSER = '' +
   'This page requires a browser that supports WebGL.<br/>' +
   '<a href="http://get.webgl.org">Click here to upgrade your browser.</a>';
 
@@ -89,7 +89,7 @@ var GET_A_WEBGL_BROWSER = '' +
  * Mesasge for need better hardware
  * @type {string}
  */
-var OTHER_PROBLEM = '' +
+public static readonly OTHER_PROBLEM = '' +
   "It doesn't appear your computer can support WebGL.<br/>" +
   '<a href="http://get.webgl.org">Click here for more information.</a>';
 
@@ -105,18 +105,18 @@ var OTHER_PROBLEM = '' +
  *     if there is an error during creation.
  * @return {WebGLRenderingContext} The created context.
  */
-var setupWebGL = function(canvas, opt_attribs, opt_onError) {
+public static setupWebGL(canvas, opt_attribs = null, opt_onError = null) {
   function handleCreationError(msg) {
       var container = document.getElementsByTagName("body")[0];
     //var container = canvas.parentNode;
     if (container) {
       var str = window.WebGLRenderingContext ?
-           OTHER_PROBLEM :
-           GET_A_WEBGL_BROWSER;
+           WebGLUtils.OTHER_PROBLEM :
+           WebGLUtils.GET_A_WEBGL_BROWSER;
       if (msg) {
         str += "<br/><br/>Status: " + msg;
       }
-      container.innerHTML = makeFailHTML(str);
+      container.innerHTML = WebGLUtils.makeFailHTML(str);
     }
   };
 
@@ -127,7 +127,7 @@ var setupWebGL = function(canvas, opt_attribs, opt_onError) {
           opt_onError(event.statusMessage);
         }, false);
   }
-  var context = create3DContext(canvas, opt_attribs);
+  var context = WebGLUtils.create3DContext(canvas, opt_attribs);
   if (!context) {
     if (!window.WebGLRenderingContext) {
       opt_onError("");
@@ -145,7 +145,7 @@ var setupWebGL = function(canvas, opt_attribs, opt_onError) {
  *     from. If one is not passed in one will be created.
  * @return {!WebGLContext} The created context.
  */
-var create3DContext = function(canvas, opt_attribs) {
+public static create3DContext(canvas, opt_attribs) {
   var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
   var context = null;
   for (var ii = 0; ii < names.length; ++ii) {
@@ -159,11 +159,7 @@ var create3DContext = function(canvas, opt_attribs) {
   return context;
 }
 
-return {
-  create3DContext: create3DContext,
-  setupWebGL: setupWebGL
 };
-}();
 
 /**
  * Provides requestAnimationFrame in a cross browser
@@ -173,9 +169,9 @@ if (!window.requestAnimationFrame) {
   window.requestAnimationFrame = (function() {
     return window.requestAnimationFrame ||
            window.webkitRequestAnimationFrame ||
-           window.mozRequestAnimationFrame ||
-           window.oRequestAnimationFrame ||
-           window.msRequestAnimationFrame ||
+           (window as any).mozRequestAnimationFrame ||
+           (window as any).oRequestAnimationFrame ||
+           (window as any).msRequestAnimationFrame ||
            function(/* function FrameRequestCallback */ callback, /* DOMElement Element */ element) {
              window.setTimeout(callback, 1000/60);
            };
@@ -188,10 +184,10 @@ if (!window.requestAnimationFrame) {
  * Checks for cross-browser support, falls back to clearTimeout. 
  * @param {number}  Animation frame request. */
 if (!window.cancelAnimationFrame) {
-  window.cancelAnimationFrame = (window.cancelRequestAnimationFrame ||
-                                 window.webkitCancelAnimationFrame || window.webkitCancelRequestAnimationFrame ||
-                                 window.mozCancelAnimationFrame || window.mozCancelRequestAnimationFrame ||
-                                 window.msCancelAnimationFrame || window.msCancelRequestAnimationFrame ||
-                                 window.oCancelAnimationFrame || window.oCancelRequestAnimationFrame ||
+  window.cancelAnimationFrame = ((window as any).cancelRequestAnimationFrame ||
+                                 window.webkitCancelAnimationFrame || (window as any).webkitCancelRequestAnimationFrame ||
+                                 (window as any).mozCancelAnimationFrame || (window as any).mozCancelRequestAnimationFrame ||
+                                 (window as any).msCancelAnimationFrame || (window as any).msCancelRequestAnimationFrame ||
+                                 (window as any).oCancelAnimationFrame || (window as any).oCancelRequestAnimationFrame ||
                                  window.clearTimeout);
 }
