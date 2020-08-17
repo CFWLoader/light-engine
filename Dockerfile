@@ -15,7 +15,7 @@ RUN gulp
 
 # prepare flask env
 WORKDIR /usr/src/app
-COPY . .
+COPY ./webapp .
 RUN pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 RUN cp -R /usr/src/game-build/dist static/light-world
