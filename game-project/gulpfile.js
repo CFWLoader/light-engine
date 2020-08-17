@@ -1,11 +1,11 @@
-var gulp = require("gulp");
-var browserify = require("browserify");
-var source = require("vinyl-source-stream");
-var tsify = require("tsify");
-var uglify = require("gulp-uglify");
-var sourcemaps = require("gulp-sourcemaps");
-var buffer = require("vinyl-buffer");
-var paths = {
+const gulp = require("gulp");
+const browserify = require("browserify");
+const source = require("vinyl-source-stream");
+const tsify = require("tsify");
+const uglify = require("gulp-uglify");
+const sourcemaps = require("gulp-sourcemaps");
+const buffer = require("vinyl-buffer");
+const paths = {
   pages: ["assets/entry.html"]
 };
 
@@ -13,13 +13,17 @@ gulp.task("copy-html", function() {
   return gulp.src(paths.pages).pipe(gulp.dest("dist"));
 });
 
+gulp.task("copy-pic", function() {
+  return gulp.src("assets/pic/**/*").pipe(gulp.dest("dist/pic"));
+});
+
 gulp.task(
   "default",
-  gulp.series(gulp.parallel("copy-html"), function() {
+  gulp.series(gulp.parallel("copy-html"), gulp.parallel("copy-pic"), function() {
     return browserify({
       basedir: ".",
       debug: true,
-      entries: ["assets/scripts/program/MultiPoint.ts"],
+      entries: ["assets/scripts/Main.ts"],
       cache: {},
       packageCache: {}
     })
