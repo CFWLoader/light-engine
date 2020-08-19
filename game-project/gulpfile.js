@@ -17,9 +17,13 @@ gulp.task("copy-pic", function() {
   return gulp.src("assets/pic/**/*").pipe(gulp.dest("dist/pic"));
 });
 
+gulp.task("copy-shaders", function() {
+  return gulp.src("assets/shaders/**/*").pipe(gulp.dest("dist/shaders"));
+});
+
 gulp.task(
   "default",
-  gulp.series(gulp.parallel("copy-html"), gulp.parallel("copy-pic"), function() {
+  gulp.series(gulp.parallel("copy-html"), gulp.parallel("copy-pic"), gulp.parallel("copy-shaders"), function() {
     return browserify({
       basedir: ".",
       debug: true,

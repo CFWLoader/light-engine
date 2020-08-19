@@ -1,4 +1,5 @@
 import { multiPoint } from "./program/MultiPoint";
+import { TexturedQuad } from "./program/TextureQuad";
 
 const VSHADER_SOURCE =
   'attribute vec4 a_Position;\n' +
@@ -13,4 +14,5 @@ const FSHADER_SOURCE =
   '  gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n' +
   '}\n';
 
-multiPoint(VSHADER_SOURCE, FSHADER_SOURCE);
+// multiPoint(VSHADER_SOURCE, FSHADER_SOURCE);
+TexturedQuad();
