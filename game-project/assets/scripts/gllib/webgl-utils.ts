@@ -105,12 +105,12 @@ public static readonly OTHER_PROBLEM = '' +
  *     if there is an error during creation.
  * @return {WebGLRenderingContext} The created context.
  */
-public static setupWebGL(canvas, opt_attribs = null, opt_onError = null) {
+public static setupWebGL(canvas, opt_attribs = null, opt_onError = null): CanvasRenderingContext2D | WebGLRenderingContext | WebGL2RenderingContext | ImageBitmapRenderingContext | null {
   function handleCreationError(msg) {
-      var container = document.getElementsByTagName("body")[0];
+      const container = document.getElementsByTagName("body")[0];
     //var container = canvas.parentNode;
     if (container) {
-      var str = window.WebGLRenderingContext ?
+      let str = window.WebGLRenderingContext ?
            WebGLUtils.OTHER_PROBLEM :
            WebGLUtils.GET_A_WEBGL_BROWSER;
       if (msg) {
@@ -127,7 +127,7 @@ public static setupWebGL(canvas, opt_attribs = null, opt_onError = null) {
           opt_onError(event.statusMessage);
         }, false);
   }
-  var context = WebGLUtils.create3DContext(canvas, opt_attribs);
+  const context = WebGLUtils.create3DContext(canvas, opt_attribs);
   if (!context) {
     if (!window.WebGLRenderingContext) {
       opt_onError("");
@@ -143,12 +143,12 @@ public static setupWebGL(canvas, opt_attribs = null, opt_onError = null) {
  * Creates a webgl context.
  * @param {!Canvas} canvas The canvas tag to get context
  *     from. If one is not passed in one will be created.
- * @return {!WebGLContext} The created context.
+ * @return {CanvasRenderingContext2D | WebGLRenderingContext | WebGL2RenderingContext | ImageBitmapRenderingContext | null} The created context.
  */
-public static create3DContext(canvas, opt_attribs) {
-  var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
-  var context = null;
-  for (var ii = 0; ii < names.length; ++ii) {
+public static create3DContext(canvas, opt_attribs) : CanvasRenderingContext2D | WebGLRenderingContext | WebGL2RenderingContext | ImageBitmapRenderingContext | null {
+  const names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+  let context = null;
+  for (let ii = 0; ii < names.length; ++ii) {
     try {
       context = canvas.getContext(names[ii], opt_attribs);
     } catch(e) {}

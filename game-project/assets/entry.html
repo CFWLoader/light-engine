@@ -6,23 +6,11 @@
     <title>Prototype</title>
 </head>
 
-<body onload="main()">
+<body>
     <canvas id="webgl" width="1280" height="720">
         This browser might not support "canvas" attribute.
     </canvas>
     <script src="bundle.js"></script>
-    <script>
-        // let VSHADER_SOURCE = "attribute vec4 a_Position;void main(){gl_Position = a_Position;gl_PointSize = 10.0;}";
-        // loadShaderSourceCodes("./shaders/MultiPoint.frag");
-        // let FSHADER_SOURCE = "void main() {gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);    // Set color.}"
-        // loadShaderSourceCodes("./shaders/MultiPoint.frag");
-        function main() {
-            // let canvas = document.getElementById("webgl");
-            // multiPoint(canvas, VSHADER_SOURCE, FSHADER_SOURCE);
-        }
-    </script>
-    <h3>Image is created by WebGL. Game prototype will come soon.</h3>
-    <img src="pic/map/grass-single.png" height="100" width="100"/>
 </body>
 
 </html>

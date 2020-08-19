@@ -1,6 +1,4 @@
 import { getWebGLContext, initShaders } from "../gllib/cuon-utils";
-import * as fs from "fs";
-import * as path from "path";
 import AssetManager, { AssetType } from "../../AssetManager";
 
 function initVertexBuffers(gl) {
@@ -42,7 +40,7 @@ function initVertexBuffers(gl) {
     return numVetices;
 }
 
-function initTextures(gl, numVetices) {
+function initTextures(gl, numVetices: number) {
     let texture = gl.createTexture();       // Create texture object.
     if (!texture) {
         console.log("Failed to create the texture obejct.");
@@ -68,7 +66,7 @@ function initTextures(gl, numVetices) {
     return true;
 }
 
-function loadTexture(gl, numVetices, texture, uSampler, imgObj) {
+function loadTexture(gl: WebGLRenderingContext, numVetices, texture, uSampler, imgObj) {
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);          // Invert y axis for texture image.
     // Enable number 0 texture unit.
     gl.activeTexture(gl.TEXTURE0);
@@ -90,7 +88,7 @@ export function TexturedQuad() {
     // console.log(VSHADER_SOURCE.data);
     // console.log(FSHADER_SOURCE.data);
     const canvas = document.getElementById("webgl");
-    const gl = getWebGLContext(canvas);
+    const gl = getWebGLContext(canvas) as WebGLRenderingContext;
     if (!gl) {
         console.log("Failed to get the rendering context of WebGL!");
         return;

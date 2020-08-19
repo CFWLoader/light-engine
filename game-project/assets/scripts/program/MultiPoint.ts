@@ -2,7 +2,7 @@ import { getWebGLContext, initShaders } from "../gllib/cuon-utils";
 
 export function multiPoint(vShader: string, fShader: string) {
     let canvas = document.getElementById("webgl");
-    let gl = getWebGLContext(canvas);
+    let gl = getWebGLContext(canvas) as WebGLRenderingContext;
     if (!gl) {
         console.log("Failed to get the rendering context of WebGL!");
         return;
