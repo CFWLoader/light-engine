@@ -1,8 +1,9 @@
 export const enum AssetType {
     PLAIN_TEXT = 0,
+    TEXTURE = 1,
 };
 
-export function loadPlainText(fileName: string, callback?: (errCode: number, data: any) => void) {
+function loadPlainText(fileName: string, callback?: (errCode: number, data: any) => void) {
     const xhr = new XMLHttpRequest();
     // let okStatus = document.location.protocol === "http:" ? 0 : 200;
     // console.log(okStatus);
@@ -17,7 +18,7 @@ export function loadPlainText(fileName: string, callback?: (errCode: number, dat
     xhr.send();
 }
 
-export function loadPlainTextSync(fileName: string): { errCode: number, data: any } {
+function loadPlainTextSync(fileName: string): { errCode: number, data: any } {
     const xhr = new XMLHttpRequest();
     // let okStatus = document.location.protocol === "http:" ? 0 : 200;
     // console.log(okStatus);
@@ -26,6 +27,32 @@ export function loadPlainTextSync(fileName: string): { errCode: number, data: an
     xhr.send();
     return { errCode: xhr.status, data: xhr.responseText };
 }
+
+function loadImage(fileName: string, callback?: (errCode: number, data: any) => void) {
+    const xhr = new XMLHttpRequest();
+    // let okStatus = document.location.protocol === "http:" ? 0 : 200;
+    // console.log(okStatus);
+    xhr.open('GET', fileName, true);
+    xhr.responseType = "arraybuffer";
+    xhr.onload = (e) => {
+        callback?.(xhr.status, xhr.response);
+    };
+    xhr.onerror = (e) => {
+        callback?.(xhr.status, null);
+    }
+    xhr.send();
+}
+
+function loadImageSync(fileName: string): { errCode: number, data: any } {
+    const xhr = new XMLHttpRequest();
+    // let okStatus = document.location.protocol === "http:" ? 0 : 200;
+    // console.log(okStatus);
+    xhr.open('GET', fileName, false);
+    // xhr.responseType = "arraybuffer";
+    xhr.send();
+    return { errCode: xhr.status, data: xhr.response };
+}
+
 
 export default class AssetManager {
     public static readonly ASSET_ROOT = ".";
@@ -38,12 +65,19 @@ export default class AssetManager {
     public static loadPlainText(assetPath: string, callback?: (errCode: number, data: any) => void) {
         loadPlainText(assetPath, callback);
     }
+    public static loadTexture(assetPath: string, callback?: (errCode: number, data: any) => void) {
+        loadImage(assetPath, callback);
+    }
     public static loadPlainTextSync(assetPath: string): { errCode: number, data: any } {
         return loadPlainTextSync(assetPath);
+    }
+    public static loadTextureSync(assetPath: string): { errCode: number, data: any } {
+        return loadImageSync(assetPath);
     }
     public static load(assetPath: string, assetType: AssetType, callback?: (errCode: number, data: any) => void) {
         switch (assetType) {
             case AssetType.PLAIN_TEXT: AssetManager.loadPlainText(assetPath, callback); break;
+            case AssetType.TEXTURE:  AssetManager.loadTexture(assetPath, callback); break;
             default:
                 console.error("Unsupported Asset Type!");
         }
@@ -51,6 +85,7 @@ export default class AssetManager {
     public static loadSync(assetPath: string, assetType: AssetType): { errCode: number, data: any } {
         switch (assetType) {
             case AssetType.PLAIN_TEXT: return AssetManager.loadPlainTextSync(assetPath);
+            case AssetType.TEXTURE: return AssetManager.loadTextureSync(assetPath);
             default:
                 console.error("Unsupported Asset Type!");
         }
