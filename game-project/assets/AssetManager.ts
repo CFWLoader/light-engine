@@ -43,15 +43,17 @@ function loadImage(fileName: string, callback?: (errCode: number, data: any) => 
     xhr.send();
 }
 
-function loadImageSync(fileName: string): { errCode: number, data: any } {
-    const xhr = new XMLHttpRequest();
-    // let okStatus = document.location.protocol === "http:" ? 0 : 200;
-    // console.log(okStatus);
-    xhr.open('GET', fileName, false);
-    // xhr.responseType = "arraybuffer";
-    xhr.send();
-    return { errCode: xhr.status, data: xhr.response };
-}
+// xmlhttprequest 不支持同步方式加载text和json以外的response type
+// function loadImageSync(fileName: string): { errCode: number, data: any } {
+//     const xhr = new XMLHttpRequest();
+//     // let okStatus = document.location.protocol === "http:" ? 0 : 200;
+//     // console.log(okStatus);
+//     xhr.open('GET', fileName, false);
+//     xhr.overrideMimeType("text/plain;charset=utf-8");//默认为utf-8
+//     // xhr.responseType = "blob";
+//     xhr.send();
+//     return { errCode: xhr.status, data: xhr.response };
+// }
 
 
 export default class AssetManager {
@@ -85,7 +87,7 @@ export default class AssetManager {
     public static loadSync(assetPath: string, assetType: AssetType): { errCode: number, data: any } {
         switch (assetType) {
             case AssetType.PLAIN_TEXT: return AssetManager.loadPlainTextSync(assetPath);
-            case AssetType.TEXTURE: return AssetManager.loadTextureSync(assetPath);
+            case AssetType.TEXTURE: return { errCode: -1000, data: "unsupport sync load type" }; // return AssetManager.loadTextureSync(assetPath);
             default:
                 console.error("Unsupported Asset Type!");
         }
