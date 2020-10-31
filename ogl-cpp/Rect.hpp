@@ -1,6 +1,27 @@
 #include<GL/glew.h>
 
 class Rect {
+public:
+	Rect(float x = 0.0f, float y = 0.0f, float z = 0.0f, float width = 0.5f, float height = 0.5f):
+		_x(x), _y(y), _z(z), _width(width), _height(height),
+		_vertexData(nullptr)
+	{}
+	~Rect() {
+		if (_vertexData != nullptr) {
+			delete _vertexData;
+			_vertexData = nullptr;
+		}
+	}
+	GLfloat* getVertexData(){
+		if (_vertexData == nullptr) {
+			_vertexData = new GLfloat[18];
+			calculate2DVertices();
+		}
+		return _vertexData;
+	}
+	size_t vertexBufferSize() const {
+		return 18;
+	}
 private:
 	float _x;
 	float _y;
@@ -36,23 +57,5 @@ private:
 		for (int idx = 2; idx < 18; idx += 3) {
 			_vertexData[idx] = 0.0f;
 		}
-	}
-public:
-	Rect(float x = 0.0f, float y = 0.0f, float z = 0.0f, float width = 0.5f, float height = 0.5f):
-		_x(x), _y(y), _z(z), _width(width), _height(height),
-		_vertexData(nullptr)
-	{}
-	~Rect() {
-		if (_vertexData != nullptr) {
-			delete _vertexData;
-			_vertexData = nullptr;
-		}
-	}
-	GLfloat* getVertexData(){
-		if (_vertexData == nullptr) {
-			_vertexData = new GLfloat[18];
-			calculate2DVertices();
-		}
-		return _vertexData;
 	}
 };

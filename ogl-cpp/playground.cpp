@@ -15,7 +15,7 @@ using namespace glm;
 
 #include <common/shader.hpp>
 
-#include <Rect.hpp>
+#include <BatchData.hpp>
 
 int main(void)
 {
@@ -66,12 +66,16 @@ int main(void)
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
 	Rect rectInst = Rect();
+	Rect rectInst2 = Rect(0.5, 0.5, 0, 0.2, 0.2);
+	BatchData primData = BatchData();
+	primData.addRect(rectInst);
+	primData.addRect(rectInst2);
 
-	static GLfloat* g_vertex_buffer_data = rectInst.getVertexData();
+	static GLfloat* g_vertex_buffer_data = primData.getVBO();
 	for (int idx = 0; idx < 18; idx += 3) {
 		printf("(%f, %f, %f)\n", g_vertex_buffer_data[idx], g_vertex_buffer_data[idx + 1], g_vertex_buffer_data[idx + 2]);
 	}
-	const size_t vertNum = 6;
+	const size_t vertNum = primData.numOfVertex();
 
 	/*
 	static const GLfloat g_vertex_buffer_data[] = {
