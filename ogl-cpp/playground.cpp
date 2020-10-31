@@ -66,15 +66,19 @@ int main(void)
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
 	Rect rectInst = Rect();
-	Rect rectInst2 = Rect(0.5, 0.5, 0, 0.2, 0.2);
+	Rect rectInst2 = Rect(0.0f, 0.0f, 0.0f, 0.2f, 0.2f);
+	rectInst2.setColor(0.8f, 0.8f, 0.5f);
 	BatchData primData = BatchData();
 	primData.addRect(rectInst);
 	primData.addRect(rectInst2);
 
 	static GLfloat* g_vertex_buffer_data = primData.getVBO();
+	static GLfloat* g_color_buffer_data = primData.getColorBuffer();
+	/*
 	for (int idx = 0; idx < 18; idx += 3) {
 		printf("(%f, %f, %f)\n", g_vertex_buffer_data[idx], g_vertex_buffer_data[idx + 1], g_vertex_buffer_data[idx + 2]);
 	}
+	*/
 	const size_t vertNum = primData.numOfVertex();
 
 	/*
@@ -93,6 +97,11 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertNum * 3, g_vertex_buffer_data, GL_STATIC_DRAW);
 
+	GLuint colorbuffer;
+	glGenBuffers(1, &colorbuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertNum * 3, g_color_buffer_data, GL_STATIC_DRAW);
+
 	do {
 
 		// Clear the screen
@@ -106,6 +115,17 @@ int main(void)
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 		glVertexAttribPointer(
 			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+			3,                  // size
+			GL_FLOAT,           // type
+			GL_FALSE,           // normalized?
+			0,                  // stride
+			(void*)0            // array buffer offset
+		);
+
+		glEnableVertexAttribArray(1);
+		glBindBuffer(GL_ARRAY_BUFFER, colorbuffer);
+		glVertexAttribPointer(
+			1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
 			3,                  // size
 			GL_FLOAT,           // type
 			GL_FALSE,           // normalized?
