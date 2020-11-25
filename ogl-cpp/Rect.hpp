@@ -80,7 +80,7 @@ private:
 		_vertexData[15] = vl;
 		_vertexData[16] = vt;
 		for (int idx = 2; idx < 18; idx += 3) {
-			_vertexData[idx] = 0.0f;
+			_vertexData[idx] = _z;
 		}
 	}
 };
