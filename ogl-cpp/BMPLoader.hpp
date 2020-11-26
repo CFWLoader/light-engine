@@ -39,6 +39,15 @@ public:
 		//Everything is in memory now, the file can be closed
 		fclose(file);
 	}
+	unsigned int GetWidth() const {
+		return width;
+	}
+	unsigned int GetHeight() const {
+		return height;
+	}
+	unsigned char* GetData() const {
+		return data;
+	}
 private:
 	string mBmpPath;
 	// Data read from the header of the BMP file

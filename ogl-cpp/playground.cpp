@@ -16,6 +16,17 @@ using namespace glm;
 #include <common/shader.hpp>
 
 #include <BatchData.hpp>
+#include <BMPLoader.hpp>
+
+int drawTexture(const BMPLoader& bmp) {
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bmp.GetWidth(), bmp.GetHeight(), 0, GL_BGR, GL_UNSIGNED_BYTE, bmp.GetData());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	return 0;
+}
 
 int main(void)
 {
@@ -58,6 +69,11 @@ int main(void)
 	// Dark blue background
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
+	// Enable depth test
+	glEnable(GL_DEPTH_TEST);
+	// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LESS);
+
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
 	glBindVertexArray(VertexArrayID);
@@ -65,7 +81,7 @@ int main(void)
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
 
-	Rect rectInst = Rect();
+	Rect rectInst = Rect(0.0, 0.0, 0.1f);
 	Rect rectInst2 = Rect(0.0f, 0.0f, 0.0f, 0.2f, 0.2f);
 	rectInst2.setColor(0.8f, 0.8f, 0.5f);
 	BatchData primData = BatchData();
@@ -105,7 +121,7 @@ int main(void)
 	do {
 
 		// Clear the screen
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		// Use our shader
 		glUseProgram(programID);
