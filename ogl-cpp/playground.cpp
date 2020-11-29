@@ -48,15 +48,23 @@ void drawTextureDemo() {
 	primData.addRect(rectInst);
 	// primData.addRect(rectInst2);
 
-	static GLfloat* g_vertex_buffer_data = primData.getVBO();
+	static GLfloat* g_vertex_buffer_data =  primData.getVBO();
 	// static GLfloat* g_color_buffer_data = primData.getColorBuffer();
-	static GLfloat g_uv_buffer_data[] = { 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 1.0f };
+	static GLfloat g_uv_buffer_data[] = { 
+		0.0f, 0.0f, 
+		1.0f, 0.0f, 
+		0.0f, 1.0f, 
+		1.0f, 0.0f, 
+		1.0f, 1.0f, 
+		0.0f, 1.0f };
 	/*
 	for (int idx = 0; idx < 18; idx += 3) {
 		printf("(%f, %f, %f)\n", g_vertex_buffer_data[idx], g_vertex_buffer_data[idx + 1], g_vertex_buffer_data[idx + 2]);
 	}
 	*/
 	const size_t vertNum = primData.numOfVertex();
+
+	// printf("%d", vertNum);
 
 	/*
 	static const GLfloat g_vertex_buffer_data[] = {
@@ -111,7 +119,7 @@ void drawTextureDemo() {
 		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
 		glVertexAttribPointer(
 			1,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-			3,                  // size
+			2,                  // size
 			GL_FLOAT,           // type
 			GL_FALSE,           // normalized?
 			0,                  // stride
@@ -119,7 +127,7 @@ void drawTextureDemo() {
 		);
 
 		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, vertNum); // 3 indices starting at 0 -> 1 triangle
+		glDrawArrays(GL_TRIANGLES, 0, 6); // 3 indices starting at 0 -> 1 triangle
 
 		glDisableVertexAttribArray(0);
 
