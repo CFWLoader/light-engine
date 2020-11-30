@@ -1,9 +1,0 @@
-{
-    "files": [
-        "assets/scripts/**/*.ts"
-    ],
-    "compilerOptions": {
-        "noImplicitAny": false,
-        "target": "es5"
-    }
-}
